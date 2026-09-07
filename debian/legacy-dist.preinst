@@ -3,16 +3,11 @@
 ## Copyright (C) 2012 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions.
 
-## A dpkg PREINST runs before this package's Depends are configured, so nothing
-## from another package can be assumed present. The three waivers below all
-## follow from that; none of them is a preference.
-## style-ok: no-strict -- 'set -e' is the Debian maintainer-script convention.
-##   'set -o nounset' would abort an install on any unset DPKG_* variable, and
-##   errexit/inherit_errexit change the failure semantics dpkg relies on.
-## style-ok: no-has -- 'has' comes from helper-scripts, which this script itself
-##   only sources conditionally ('if [ -f ... ]') for exactly this reason.
-## style-ok: no-safe-rm -- safe-rm is not even a Depends of this package, so it
-##   may be absent; a 'safe-rm || rm' fallback is prohibited, so plain rm it is.
+## A dpkg preinst runs before this package's Depends are configured, so nothing
+## from another package can be assumed present.
+## style-ok: no-strict
+## style-ok: no-has
+## style-ok: no-safe-rm
 
 if [ -f /usr/libexec/helper-scripts/pre.bsh ]; then
    source /usr/libexec/helper-scripts/pre.bsh
@@ -20,8 +15,8 @@ fi
 
 set -e
 
-## dpkg exports DPKG_MAINTSCRIPT_* into every maintainer script; nothing in
-## this file assigns them, which is what SC2154 reports.
+## dpkg exports DPKG_MAINTSCRIPT_* into every maintainer script, but shellcheck
+## doesn't know that.
 # shellcheck disable=SC2154
 true "
 #####################################################################
@@ -139,7 +134,7 @@ symlink_fix() {
 }
 
 keyboard_configuration_debconf_preseed() {
-   if [ -f "/var/lib/whonix/do_once/${FUNCNAME[0]}_version_2" ]; then
+   if [ -f "/var/lib/whonix/do_once/${FUNCNAME[0]}_version_1" ]; then
       return 0
    fi
 
@@ -149,13 +144,6 @@ keyboard_configuration_debconf_preseed() {
    printf '%s\n' "keyboard-configuration	keyboard-configuration/compose	select	No compose key" | debconf-set-selections
    printf '%s\n' "keyboard-configuration	keyboard-configuration/ctrl_alt_bksp	boolean	false" | debconf-set-selections
    printf '%s\n' "keyboard-configuration	keyboard-configuration/unsupported_config_options	boolean	true" | debconf-set-selections
-   ## "Generic 105-key PC (intl.)" does not exist in trixie -- 0 hits in
-   ## keyboard-configuration.config, in xkb-data's rule files, and in the shipped
-   ## templates.dat. A select answer naming no choice is not inert: where
-   ## keyboard-configuration detects a keyboard it asks the question, finds the
-   ## stored value invalid and takes the FIRST entry of CHOICES -- "A4Tech KB-21",
-   ## which is what CI-built images currently ship in /etc/default/keyboard.
-   ## The intended model is the one modelcode already names below: pc105.
    printf '%s\n' "keyboard-configuration	keyboard-configuration/model	select	Generic 105-key PC" | debconf-set-selections
    printf '%s\n' "keyboard-configuration	keyboard-configuration/switch	select	No temporary switch" | debconf-set-selections
    printf '%s\n' "keyboard-configuration	keyboard-configuration/unsupported_options	boolean	true" | debconf-set-selections
@@ -171,7 +159,7 @@ keyboard_configuration_debconf_preseed() {
    printf '%s\n' "keyboard-configuration	keyboard-configuration/modelcode	string	pc105" | debconf-set-selections
 
    mkdir --parents "/var/lib/whonix/do_once"
-   touch "/var/lib/whonix/do_once/${FUNCNAME[0]}_version_2"
+   touch "/var/lib/whonix/do_once/${FUNCNAME[0]}_version_1"
 }
 
 kexec_tools_preseed() {
@@ -354,8 +342,8 @@ migrations_for_old_versions() {
    apt_mark_keep_one
 }
 
-## dpkg exports DPKG_MAINTSCRIPT_* into every maintainer script; nothing in
-## this file assigns them, which is what SC2154 reports.
+## dpkg exports DPKG_MAINTSCRIPT_* into every maintainer script, but shellcheck
+## doesn't know this.
 # shellcheck disable=SC2154
 true "1: $1"
 true "2: $2"

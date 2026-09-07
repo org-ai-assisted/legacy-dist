@@ -15,26 +15,24 @@ export LC_ALL=C
 
 true "INFO: START"
 
+# shellcheck source=../../../helper-scripts/usr/libexec/helper-scripts/strings.bsh
+source "${HELPER_SCRIPTS_PATH:-}"/usr/libexec/helper-scripts/strings.bsh
+
 ## TODO: Debian forky
 version="3.3"
-[ -v source_codename ] || source_codename=bookworm
-[ -v target_codename ] || target_codename=trixie
 
-## Set by an option, by the caller's environment, or by one block of this
-## script and read in another. Any of them can legitimately be absent, so give
-## them a defined value here rather than let a bare read abort a release
-## upgrade under nounset. derivative_list_contents is the one that matters
-## most: it is assigned only when derivative.sources is missing, yet read
-## unconditionally further down.
-[ -v downloadonly ] || downloadonly=""
-[ -v force ] || force=""
-[ -v old_meta_package ] || old_meta_package=""
-[ -v new_meta_package ] || new_meta_package=""
-[ -v derivative_list_contents ] || derivative_list_contents=""
-[ -v proceed_with_upgrade ] || proceed_with_upgrade=""
-[ -v qubes_version ] || qubes_version=""
-[ -v upgrade_simulate_results ] || upgrade_simulate_results=""
-[ -v DEBIAN_FRONTEND ] || DEBIAN_FRONTEND=""
+default_if_empty source_codename 'bookworm'
+default_if_empty target_codename 'trixie'
+
+default_if_empty downloadonly ""
+default_if_empty force ""
+default_if_empty old_meta_package ""
+default_if_empty new_meta_package ""
+default_if_empty derivative_list_contents ""
+default_if_empty proceed_with_upgrade ""
+default_if_empty qubes_version ""
+default_if_empty upgrade_simulate_results ""
+default_if_empty DEBIAN_FRONTEND ""
 
 true "INFO: (release-upgrade version: ${version}) Release upgrade from Debian ${source_codename} to Debian ${target_codename} in progress..."
 
@@ -207,7 +205,7 @@ fi
 
 while true; do
    ## Called with no arguments at all is the normal case.
-   case "${1-}" in
+   case "${1:-}" in
       --downloadonly)
          downloadonly=true
          shift
@@ -242,7 +240,7 @@ export DEBDEBUG=1
 if test -f /usr/share/qubes/marker-vm; then
    true "INFO: Qubes detected."
    qubes_version="$(grep -v '^#' /usr/share/qubes/marker-vm)"
-   if grep --quiet -e '^4.2' <<< "${qubes_version}" ; then
+   if printf "%s\n" "${qubes_version}" | grep -e '^4.2' >/dev/null 2>&1; then
       true "\
 WARNING:
 

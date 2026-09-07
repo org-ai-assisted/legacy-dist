@@ -18,11 +18,6 @@ fi
 # shellcheck source=../../../../helper-scripts/usr/libexec/helper-scripts/has.sh
 source "${HELPER_SCRIPTS_PATH:-}"/usr/libexec/helper-scripts/has.sh
 
-## Set by dpkg when this runs from a maintainer script, absent when it does
-## not; a bare read would abort every fix under nounset.
-[ -v DPKG_MAINTSCRIPT_PACKAGE ] || DPKG_MAINTSCRIPT_PACKAGE=""
-[ -v DPKG_MAINTSCRIPT_NAME ] || DPKG_MAINTSCRIPT_NAME=""
-
 true "${0}: START"
 
 user_list=()
@@ -84,7 +79,6 @@ bisq_desktop_directories_workaround() {
    local user_name qubes_vm_name
 
    user_name="user"
-   ## Assigned only when qubesdb-read exists, but read unconditionally below.
    qubes_vm_name=""
    if test -f "/home/${user_name}/.local/share/Bisq/btc_mainnet/tor/tor" ; then
       return 0
@@ -343,8 +337,6 @@ secure_boot_mok_cleanup() {
       source "${HELPER_SCRIPTS_PATH:-}"/usr/sbin/shim-signed-mok-setup
       dkms_mok_variables_set
 
-      ## Both are assigned by dkms_mok_variables_set in the file sourced
-      ## above, which shellcheck cannot follow in an isolated checkout.
       # shellcheck disable=SC2154
       safe-rm --force -- "${dkms_mok_public_file}"
       # shellcheck disable=SC2154
@@ -359,8 +351,8 @@ fi
 
 ## Fix for:
 ## dpkg-maintscript-helper: error: couldn't identify the package
-[ -n "${DPKG_MAINTSCRIPT_PACKAGE}" ] || DPKG_MAINTSCRIPT_PACKAGE="legacy-dist"
-[ -n "${DPKG_MAINTSCRIPT_NAME}" ] || DPKG_MAINTSCRIPT_NAME="preinst"
+[ -n "${DPKG_MAINTSCRIPT_PACKAGE:-}" ] || DPKG_MAINTSCRIPT_PACKAGE="legacy-dist"
+[ -n "${DPKG_MAINTSCRIPT_NAME:-}" ] || DPKG_MAINTSCRIPT_NAME="preinst"
 export DPKG_MAINTSCRIPT_PACKAGE DPKG_MAINTSCRIPT_NAME
 timeout --kill-after 60 60 /var/lib/dpkg/info/legacy-dist.preinst install || true
 
