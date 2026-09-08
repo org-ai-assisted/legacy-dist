@@ -7,7 +7,7 @@
 ## workflow runtime.
 
 dist-ai-tests:
-  ## legacy-dist sources helper-scripts' origins-parser, log_run_die.sh, has.sh,
+  ## legacy-dist sources helper-scripts' origins-parser, log_run_die.sh, has.bsh,
   ## shim-signed-mok-setup and package_installed_check.sh/.bsh by the
   ## '${HELPER_SCRIPTS_PATH:-}' path with a relative '# shellcheck source='
   ## directive. Provide helper-scripts as the repo sibling so the
