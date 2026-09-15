@@ -1,3 +1,54 @@
+commit b2b2a1a5de11ccac59cbf430d67ff2e4acfa4502
+Merge: ea2854e 5fa2ef6
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Sep 14 02:24:46 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/ArrayBolt3/arraybolt3/trixie'
+
+commit 5fa2ef60083c4b6f9c03e3ffe12d7bb63ce5831d
+Merge: ea2854e 94e7503
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Sun Sep 13 10:48:58 2026 -0400
+
+    Merge branch 'ai' into arraybolt3/trixie
+
+commit 94e750327993aa36c433c470038be8206c1919d6
+Merge: 460aa0b c6d5e6b
+Author: claude <noreply@anthropic.com>
+Date:   Tue Sep 8 13:11:25 2026 -0400
+
+    Merge branch 'master' into ai
+
+commit c6d5e6ba3be978970dfe4800b5b7274a82031b6d
+Merge: ea2854e 460aa0b
+Author: assisted-by-ai (Bot Account) (Machine Account) <228987186+assisted-by-ai@users.noreply.github.com>
+Date:   Mon Sep 7 22:13:37 2026 -0400
+
+    Merge pull request #4 from org-ai-assisted/ai
+
+    rename has.sh -> has.bsh (bashism convention)
+
+commit 460aa0b98ff6f7294d2e8f1b01f84e80b6f02275
+Author: claude (dev474 c7439536-fad8-4884-b71a-d2f3c4c23905) <noreply@anthropic.com>
+Date:   Mon Sep 7 11:07:12 2026 -0400
+
+    rename has.sh to has.bsh (bashism convention)
+
+    Sourced helper-scripts lib uses bashisms; .bsh marks it. Path-only edit.
+
+commit 3ad2a40f1f42891819b8f2743e4417154045f98b
+Merge: 9bde0d9 ea2854e
+Author: claude (dev474 c7439536-fad8-4884-b71a-d2f3c4c23905) <noreply@anthropic.com>
+Date:   Mon Sep 7 11:07:12 2026 -0400
+
+    Merge branch 'master' into ai
+
+commit ea2854eba59bf93a6fe29d04728b0a1b903343ee
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Sep 6 16:42:14 2026 +0000
+
+    bumped changelog version
+
 commit 01f58522a36015d8b1a2308d29d76e7bcfaab946
 Merge: f44fe5c 6847039
 Author: Patrick Schleizer <adrelanos@whonix.org>
