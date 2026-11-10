@@ -5,7 +5,11 @@
 
 ## provides was_executed
 # shellcheck source=../../../../helper-scripts/usr/libexec/helper-scripts/check_runtime.bsh
-source "${HELPER_SCRIPTS_PATH:-}"/usr/libexec/helper-scripts/check_runtime.bsh
+source "${HELPER_SCRIPTS_PATH:-}"/usr/libexec/helper-scripts/check_runtime.bsh || true
+if ! declare -F was_executed >/dev/null; then
+   printf '%s\n' "$0: ERROR: cannot source check_runtime.bsh!" >&2
+   exit 1
+fi
 
 ## provides has
 # shellcheck source=../../../../helper-scripts/usr/libexec/helper-scripts/has.bsh
@@ -274,7 +278,7 @@ pcmanfm_qt_removable_media_automount() {
 ## default)
 pcmanfm_qt_archiver() {
    local root="${LEGACY_DIST_TEST_ROOT:-}"
-   if [ -f "${root}/var/lib/whonix/do_once/${FUNCNAME[0]}_version_2" ]; then
+   if [ -f "${root}/var/lib/whonix/do_once/${FUNCNAME[0]}_version_3" ]; then
       return 0
    fi
 
@@ -296,7 +300,7 @@ pcmanfm_qt_archiver() {
    done
 
    mkdir --parents -- "${root}/var/lib/whonix/do_once"
-   touch -- "${root}/var/lib/whonix/do_once/${FUNCNAME[0]}_version_2"
+   touch -- "${root}/var/lib/whonix/do_once/${FUNCNAME[0]}_version_3"
 }
 
 ## Removes insecure MOK keys that were accidentally shipped in installation
